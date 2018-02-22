@@ -80,11 +80,20 @@ class WayBillService
     {
         $model = $this->waybillRepository->findOne($id);
         $this->httpNotFoundException($model);
-        if (!$model->delete()) {
-            Yii::warning('Unable to delete model');
-        }
+        $this->remove($model);
     }
 
+    /**
+     * @param array $ids
+     */
+    public function deletes(array $ids)
+    {
+        $models = Waybill::find()->andWhere(['IN', 'id', $ids])->all();
+
+        foreach ($models as $model) {
+            $this->remove($model);
+        }
+    }
 
     /**
      * @param ActiveRecord|null $model
@@ -100,10 +109,22 @@ class WayBillService
     /**
      * @param ActiveRecord $model
      */
-    public function save(ActiveRecord $model): void
+    private function save(ActiveRecord $model): void
     {
         if (!$model->save()) {
             Yii::warning('Unable to save model');
         }
     }
+
+
+    /**
+     * @param ActiveRecord $model
+     */
+    private function remove(ActiveRecord $model)
+    {
+        if (!$model->delete()) {
+            Yii::warning('Unable to delete model');
+        }
+    }
+
 }

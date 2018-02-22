@@ -140,6 +140,14 @@ class WaybillController extends Controller
         ]);
     }
 
+    public function actionDeletes()
+    {
+        $ids = Yii::$app->request->post('ids', []);
+        $this->wayBillService->deletes($ids);
+
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
     /**
      * Deletes an existing Waybill model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

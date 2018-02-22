@@ -3,8 +3,11 @@
 use app\models\Waybill;
 use app\widgets\WaybillWidget;
 use yii\bootstrap\Modal;
+use yii\grid\ActionColumn;
+use yii\grid\SerialColumn;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -17,7 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="waybill-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
 
@@ -41,8 +43,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
+            ['class' => SerialColumn::class],
+            [
+                'label' => '',
+                'value' => function (Waybill $model) {
+                    return Html::checkbox('ids[]', false, ['value' => $model->id, 'form' => 'action']);
+                },
+                'format' => 'raw'
+            ],
             'id',
             'from',
             'to',
@@ -55,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'class' => \yii\grid\ActionColumn::class,
+                'class' => ActionColumn::class,
                 'buttons' => [
                     'update' => function ($url, $model, $key) {
                         return Yii::$app->view->render('//waybill/modal-update', ['model' => $model]);
@@ -64,5 +72,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+
     <?php Pjax::end() ?>
+
+    <form action="" id="action" method="post" onsubmit="this.action = $(this.url).val()">
+        <?= Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->csrfToken) ?>
+        <div class="col-md-3">
+            <div class="input-group">
+                <?= Html::dropDownList('url', [], [
+                    Url::to(['deletes'], true) => 'Delete'
+                ], ['class' => 'form-control']); ?>
+                <span class="input-group-btn">
+                    <?= Html::submitButton('Пременить', ['class' => 'btn btn-default']) ?>
+                </span>
+            </div>
+        </div>
+    </form>
 </div>
+
+<?php
