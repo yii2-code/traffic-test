@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php Modal::end() ?>
     </p>
 
+    <?php Pjax::begin() ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -63,4 +64,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+    <?php Pjax::end() ?>
 </div>

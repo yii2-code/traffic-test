@@ -19,7 +19,7 @@ use yii\widgets\Pjax;
 
 <?php Modal::begin([
     'toggleButton' => [
-        'label' => Html::tag('span', Html::icon('pencil')),
+        'label' => Html::icon('pencil'),
         'tag' => 'a',
     ]
 ]) ?>
