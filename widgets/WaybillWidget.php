@@ -99,4 +99,12 @@ class WaybillWidget extends Widget
     {
         return $this->message;
     }
+
+    /**
+     * @return bool
+     */
+    public function isButtonDelete(): bool
+    {
+        return !is_null($this->model);
+    }
 }

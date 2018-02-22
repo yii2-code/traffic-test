@@ -37,11 +37,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php Pjax::end() ?>
         <?php Modal::end() ?>
     </p>
-
-    <?php Pjax::begin() ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
             ['class' => SerialColumn::class],
             [
@@ -72,9 +69,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-
-    <?php Pjax::end() ?>
-
     <form action="" id="action" method="post" onsubmit="this.action = $(this.url).val()">
         <?= Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->csrfToken) ?>
         <div class="col-md-3">

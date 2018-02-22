@@ -3,6 +3,7 @@
 use app\models\Waybill;
 use yii\bootstrap\Alert;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -21,8 +22,10 @@ $context = $this->context;
     ]); ?>
     <?= $context->getMessage(); ?>
     <?php Alert::end() ?>
-    <?php endif; ?>
+<?php endif; ?>
 <div class="waybill-form">
+
+    <a href="" id="refresh"></a>
 
     <?php $form = ActiveForm::begin(['action' => $context->getAction(), 'options' => ['data-pjax' => 1]]); ?>
 
@@ -36,8 +39,12 @@ $context = $this->context;
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
 
+        <?php if ($context->isButtonDelete()): ?>
+            <a href="<?= Url::to(['/waybill/delete', 'id' => $context->model->id]) ?>" class="btn btn-danger"
+               data-method="post" data-pjax="0">Delete</a>
+        <?php endif; ?>
+    </div>
     <?php ActiveForm::end(); ?>
 
 </div>
