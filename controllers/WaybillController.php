@@ -57,6 +57,9 @@ class WaybillController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'deletes' => ['POST'],
+                    'create' => ['POST'],
+                    'update' => ['POST'],
                 ],
             ],
         ];
