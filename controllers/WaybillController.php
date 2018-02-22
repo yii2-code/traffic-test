@@ -122,16 +122,21 @@ class WaybillController extends Controller
     public function actionUpdate(int $id)
     {
         $model = $this->findModel($id);
-
+        $message = null;
         $type = $this->wayBillService->createType($model);
 
-        if ($type->load(Yii::$app->request->post()) && $type->validate()) {
-            $model = $this->wayBillService->update($id, $type);
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPjax) {
+            if ($type->load(Yii::$app->request->post()) && $type->validate()) {
+                $model = $this->wayBillService->update($id, $type);
+                $type = $this->wayBillService->createType($model);
+                $message = 'Success';
+            }
         }
 
-        return $this->render('update', [
+        return $this->renderAjax('update', [
             'type' => $type,
+            'message' => $message,
+            'model' => $model,
         ]);
     }
 

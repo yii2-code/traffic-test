@@ -1,21 +1,19 @@
 <?php
-
-use yii\helpers\Html;
+/**
+ * Created by PhpStorm.
+ * User: cherem
+ * Date: 22.02.18
+ * Time: 10:24
+ */
 
 /* @var $this yii\web\View */
+/* @var $message yii\web\View */
 /* @var $type \app\types\WaybillType */
 
-$this->title = 'Update Waybill: {nameAttribute}';
-$this->params['breadcrumbs'][] = ['label' => 'Waybills', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $type->model->id, 'url' => ['view', 'id' => $type->model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+/** @var $model \app\models\Waybill */
+
+use app\widgets\WaybillWidget;
+
 ?>
-<div class="waybill-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'type' => $type,
-    ]) ?>
-
-</div>
+<?= WaybillWidget::widget(['type' => $type, 'message' => $message, 'model' => $model]) ?>

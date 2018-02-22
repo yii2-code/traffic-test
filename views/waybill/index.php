@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Waybill;
 use app\widgets\WaybillWidget;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
@@ -45,8 +46,21 @@ $this->params['breadcrumbs'][] = $this->title;
             'from',
             'to',
             'receiver',
-            'status',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'status',
+                'filter' => Waybill::getStatusDropDown(),
+                'value' => function (Waybill $model) {
+                    return $model->getStatus();
+                }
+            ],
+            [
+                'class' => \yii\grid\ActionColumn::class,
+                'buttons' => [
+                    'update' => function ($url, $model, $key) {
+                        return Yii::$app->view->render('//waybill/modal-update', ['model' => $model]);
+                    }
+                ]
+            ],
         ],
     ]); ?>
 </div>

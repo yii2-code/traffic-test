@@ -33,6 +33,7 @@ class WaybillWidget extends Widget
      */
     public $message;
 
+    public $model;
     /**
      * WaybillWidget constructor.
      * @param WayBillService $wayBillService
@@ -52,7 +53,7 @@ class WaybillWidget extends Widget
         parent::init();
 
         if (is_null($this->type)) {
-            $this->type = $this->wayBillService->createType();
+            $this->type = $this->wayBillService->createType($this->model);
         }
     }
 
@@ -69,6 +70,9 @@ class WaybillWidget extends Widget
      */
     public function getAction(): array
     {
+        if (!is_null($this->model)) {
+            return ['/waybill/update', 'id' => $this->model->id];
+        }
         return ['/waybill/create'];
     }
 

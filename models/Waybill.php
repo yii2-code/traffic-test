@@ -6,6 +6,7 @@ namespace app\models;
 
 use app\behaviors\TimestampBehavior;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%waybill}}".
@@ -122,5 +123,13 @@ class Waybill extends \yii\db\ActiveRecord
             static::STATUS_TAKE => 'Принят на склад',
             static::STATUS_RETURN => 'Возвращен',
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return ArrayHelper::getValue(static::getStatusDropDown(), $this->status);
     }
 }
