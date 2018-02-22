@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\WaybillRepository;
+use app\services\WayBillService;
 use Yii;
 use app\models\Waybill;
 use app\models\WaybillSearch;
+use yii\base\Module;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,6 +17,36 @@ use yii\filters\VerbFilter;
  */
 class WaybillController extends Controller
 {
+    /**
+     * @var WaybillRepository
+     */
+    private $waybillRepository;
+    /**
+     * @var WayBillService
+     */
+    private $wayBillService;
+
+    /**
+     * WaybillController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param WaybillRepository $waybillRepository
+     * @param WayBillService $wayBillService
+     * @param array $config
+     */
+    public function __construct(
+        $id,
+        Module $module,
+        WaybillRepository $waybillRepository,
+        WayBillService $wayBillService,
+        array $config = []
+    )
+    {
+        parent::__construct($id, $module, $config);
+        $this->waybillRepository = $waybillRepository;
+        $this->wayBillService = $wayBillService;
+    }
+
     /**
      * @inheritdoc
      */
@@ -64,14 +97,16 @@ class WaybillController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Waybill();
+        $type = $this->wayBillService->createType();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($type->load(Yii::$app->request->post()) && $type->validate()) {
+            $model = $this->wayBillService->create($type);
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'type' => $type,
         ]);
     }
 
@@ -82,16 +117,19 @@ class WaybillController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate(int $id)
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $type = $this->wayBillService->createType($model);
+
+        if ($type->load(Yii::$app->request->post()) && $type->validate()) {
+            $model = $this->wayBillService->update($id, $type);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'type' => $type,
         ]);
     }
 
@@ -104,8 +142,7 @@ class WaybillController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $this->wayBillService->delete($id);
         return $this->redirect(['index']);
     }
 
@@ -116,9 +153,9 @@ class WaybillController extends Controller
      * @return Waybill the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel(int $id)
     {
-        if (($model = Waybill::findOne($id)) !== null) {
+        if (($model = $this->waybillRepository->findOne($id)) !== null) {
             return $model;
         }
 

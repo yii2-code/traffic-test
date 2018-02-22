@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace app\models;
 
 use app\behaviors\TimestampBehavior;
@@ -19,6 +21,27 @@ use Yii;
 class Waybill extends \yii\db\ActiveRecord
 {
     /**
+     *
+     */
+    const STATUS_WAIT = 0;
+    /**
+     *
+     */
+    const STATUS_DELIVERED = 1;
+    /**
+     *
+     */
+    const STATUS_WAY = 2;
+    /**
+     *
+     */
+    const STATUS_TAKE = 3;
+    /**
+     *
+     */
+    const STATUS_RETURN = 4;
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -36,18 +59,30 @@ class Waybill extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @param string $from
+     * @param string $to
+     * @param string $receiver
+     * @return Waybill
+     */
+    public static function create(string $from, string $to, string $receiver, int $status): self
+    {
+        $model = new static();
+        $model->edit($from, $to, $receiver, $status);
+        return $model;
+    }
 
     /**
-     * @inheritdoc
+     * @param string $from
+     * @param string $to
+     * @param string $receiver
      */
-    public function rules()
+    public function edit(string $from, string $to, string $receiver, int $status): void
     {
-        return [
-            [['from', 'to', 'receiver', 'status'], 'required'],
-            [['status'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['from', 'to', 'receiver'], 'string', 'max' => 250],
-        ];
+        $this->from = $from;
+        $this->to = $to;
+        $this->receiver = $receiver;
+        $this->status = $status;
     }
 
     /**
@@ -73,5 +108,19 @@ class Waybill extends \yii\db\ActiveRecord
     public static function find()
     {
         return new WaybillQuery(get_called_class());
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatusDropDown()
+    {
+        return [
+            static::STATUS_WAIT => 'Ожидает отправки',
+            static::STATUS_DELIVERED => 'Доставлено',
+            static::STATUS_WAY => 'В пути',
+            static::STATUS_TAKE => 'Принят на склад',
+            static::STATUS_RETURN => 'Возвращен',
+        ];
     }
 }

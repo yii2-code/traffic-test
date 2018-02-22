@@ -1,10 +1,11 @@
 <?php
 
+use app\models\Waybill;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Waybill */
+/* @var $type \app\types\WaybillType */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -12,13 +13,13 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'from')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($type, 'from')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'to')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($type, 'to')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'receiver')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($type, 'receiver')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+    <?= $form->field($type, 'status')->dropDownList(Waybill::getStatusDropDown()) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
