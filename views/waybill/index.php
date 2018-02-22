@@ -1,7 +1,10 @@
 <?php
 
+use app\widgets\WaybillWidget;
+use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\WaybillSearch */
@@ -16,7 +19,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Waybill', ['create'], ['class' => 'btn btn-success']) ?>
+
+        <?php Modal::begin([
+            'toggleButton' => [
+                'label' => 'Create Waybill',
+                'tag' => 'a',
+                'class' => 'btn btn-success',
+            ]
+        ]) ?>
+        <?php Pjax::begin([
+            'enablePushState' => false,
+        ]); ?>
+        <?= WaybillWidget::widget() ?>
+        <?php Pjax::end() ?>
+        <?php Modal::end() ?>
     </p>
 
     <?= GridView::widget([
@@ -30,9 +46,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'to',
             'receiver',
             'status',
-            //'created_at',
-            //'updated_at',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

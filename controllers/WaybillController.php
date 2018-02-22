@@ -73,7 +73,7 @@ class WaybillController extends Controller
 
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -97,16 +97,18 @@ class WaybillController extends Controller
      */
     public function actionCreate()
     {
+        $message = null;
         $type = $this->wayBillService->createType();
-
-        if ($type->load(Yii::$app->request->post()) && $type->validate()) {
-            $model = $this->wayBillService->create($type);
-
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPjax) {
+            if ($type->load(Yii::$app->request->post()) && $type->validate()) {
+                $this->wayBillService->create($type);
+                $message = 'Success';
+                $type = $this->wayBillService->createType();
+            }
         }
-
-        return $this->render('create', [
+        return $this->renderAjax('create', [
             'type' => $type,
+            'message' => $message
         ]);
     }
 
